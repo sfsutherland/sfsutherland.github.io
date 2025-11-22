@@ -51,7 +51,7 @@ module_exit(hello_exit);
 
 ## 3. Create Makefile
 
-Now create a Makefile.
+Now create a file called `Makefile` with the following contents.
 
 ```
 ifneq ($(KERNELRELEASE),)
