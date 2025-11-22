@@ -1,31 +1,82 @@
 ---
 layout: post
 published: false
-title:  "Test Post 1"
+title:  "Kernel module: hello world"
 date:   2025-11-16 12:33:15 -0600
 categories: projects linux kernel
-excerpt: "Can you read this? It's called an excerpt."
+excerpt: "Here's how to compile and load a simple kernel module against a running Ubuntu OS"
 ---
-You’ll find this post in your `_posts` directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run `jekyll serve`, which launches a web server and auto-regenerates your site when a file is updated.
 
-Jekyll requires blog post files to be named according to the following format:
+There are a few ways to get a kernel module up and running locally. The simplest is to build and link against the running kernel, if your distro supports it. I'm using Ubuntu 24.04, which does. Here's how to do it.
 
-`YEAR-MONTH-DAY-title.MARKUP`
+## Create a work directory with an `output` folder
 
-Where `YEAR` is a four-digit number, `MONTH` and `DAY` are both two-digit numbers, and `MARKUP` is the file extension representing the format used in the file. After that, include the necessary front matter. Take a look at the source for this post to get an idea about how it works.
+Make a new directory and inside of it create an `output/` directory to hold the build artifacts.
 
-Jekyll also offers powerful support for code snippets:
+```
+$ mkdir -p my_module/output
+$ cd my_module
+```
 
-{% highlight ruby %}
-def print_hi(name)
-  puts "Hi, #{name}"
-end
-print_hi('Tom')
-#=> prints 'Hi, Tom' to STDOUT.
-{% endhighlight %}
+The `output/` directory isn't strictly necessary, but running the `make` command later will automatically create a bunch of build files in whatever directory you run it from. I like to have this stuff contained in its own directory instead of cluttering up my code files, so I created an `output/` directory and added `MO=` flags to the build commands below.
 
-Check out the [Jekyll docs][jekyll-docs] for more info on how to get the most out of Jekyll. File all bugs/feature requests at [Jekyll’s GitHub repo][jekyll-gh]. If you have questions, you can ask them on [Jekyll Talk][jekyll-talk].
+## Create hello.c
 
-[jekyll-docs]: https://jekyllrb.com/docs/home
-[jekyll-gh]:   https://github.com/jekyll/jekyll
-[jekyll-talk]: https://talk.jekyllrb.com/
+```
+#include <linux/init.h>
+#include <linux/module.h>
+MODULE_LICENSE("Dual BSD/GPL");
+
+static int hello_init(void)
+{
+	printk(KERN_ALERT "Hello, world\n");
+	return 0;
+}
+
+static void hello_exit(void)
+{
+	printk(KERN_ALERT "Goodbye, cruel world\n");
+}
+
+module_init(hello_init);
+module_exit(hello_exit);
+
+```
+
+
+
+## Create Makefile
+
+```
+ifneq ($(KERNELRELEASE),)
+# kbuild part of makefile
+obj-m  := hello.o
+
+else
+# normal makefile
+KDIR ?= /lib/modules/`uname -r`/build
+
+default:
+	$(MAKE) -C $(KDIR) M=$$PWD MO=$$PWD/output
+
+clean:
+	$(MAKE) -C $(KDIR) M=$$PWD MO=$$PWD/output clean
+endif
+
+```
+
+## Compile
+
+Run the following from the directory where both above files reside:
+
+```
+make -C /lib/modules/`uname -r`/build M=$PWD MO=$PWD/output
+```
+
+## References
+
+- [Official kernel docs on building external modules](https://docs.kernel.org/kbuild/modules.html).
+- [Linux Device Drivers, 3rd Edition](https://lwn.net/Kernel/LDD3/)
+
+
+[Official docs]: https://docs.kernel.org/kbuild/modules.html
