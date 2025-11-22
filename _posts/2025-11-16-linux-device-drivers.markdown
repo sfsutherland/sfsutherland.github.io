@@ -1,8 +1,10 @@
 ---
 layout: post
-title:  "Welcome to Jekyll!"
-date:   2025-05-22 19:33:15 -0600
-categories: jekyll update
+published: false
+title:  "Test Post 1"
+date:   2025-11-16 12:33:15 -0600
+categories: projects linux kernel
+excerpt: "Can you read this? It's called an excerpt."
 ---
 You’ll find this post in your `_posts` directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run `jekyll serve`, which launches a web server and auto-regenerates your site when a file is updated.
 
