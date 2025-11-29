@@ -99,11 +99,11 @@ h1, h2, h3, h4, h5, h6 {
  * Links
  */
 a {
-  color: var(--text-muted);
-  text-decoration: none;
+  color: var(--accent);
+  text-decoration: underline;
 
   &:hover {
-    color: var(--accent);
+    color: var(--text-muted);
     text-decoration: underline;
   }
 

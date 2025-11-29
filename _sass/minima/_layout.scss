@@ -18,6 +18,7 @@
   margin-bottom: 0;
   float: left;
   color: var(--text);
+  text-decoration: none;
 
   &:hover {
     text-decoration: none;
@@ -226,6 +227,10 @@
 
 .post-content {
   margin-bottom: $spacing-unit;
+
+  a {
+    font-weight: bold;
+  }
 
   h2 {
     @include relative-font-size(1.25);
