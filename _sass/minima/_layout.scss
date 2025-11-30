@@ -233,6 +233,16 @@
   }
 
   h2 {
+    @include relative-font-size(1.375);
+    font-weight: bold;
+    margin-top: $spacing-unit;
+
+    @include media-query($on-laptop) {
+      @include relative-font-size(1.375);
+    }
+  }
+
+  h3 {
     @include relative-font-size(1.25);
     font-weight: bold;
     margin-top: $spacing-unit;
@@ -242,16 +252,8 @@
     }
   }
 
-  h3 {
-    @include relative-font-size(1.625);
-
-    @include media-query($on-laptop) {
-      @include relative-font-size(1.375);
-    }
-  }
-
   h4 {
-    @include relative-font-size(1.25);
+    @include relative-font-size(1.125);
 
     @include media-query($on-laptop) {
       @include relative-font-size(1.125);
